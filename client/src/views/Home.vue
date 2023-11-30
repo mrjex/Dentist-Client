@@ -1,6 +1,5 @@
 <template>
   <div>
-    <h1>Dentist tool</h1>
     <!-- Form for publishing time slots -->
     <b-form @submit.prevent="publishTimeSlot">
       <b-form-group label="Date:" label-for="dateInput">
