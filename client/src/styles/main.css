@@ -1,0 +1,25 @@
+* {
+    margin: 0;
+}
+
+html,
+body {
+    height: 100%;
+}
+
+.content {
+    min-height: 100%;
+    padding-bottom: 25px;
+    /* equal to footer height */
+    margin-bottom: -135px;
+}
+
+.content:after {
+    content: "";
+    display: block;
+}
+
+#footer,
+.content:after {
+    height: 135px;
+}
