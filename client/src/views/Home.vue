@@ -2,11 +2,11 @@
   <div>
     <b-container v-if="this.loading" class="mx-auto text-center" id="loading-container">
       <img src="../assets/tooth.png" id="loading-img" class="d-block m-auto" />
-      <h3>Brushing Teeth...</h3>
+      <h3>Brushing teeth...</h3>
     </b-container>
     <div v-else>
       <vue-cal style="height: 650px" class="vuecal--blue-theme" :disable-views="['years', 'year', 'month']" hide-weekends
-        :time-cell-height="50" :events="appointments">
+        :time-cell-height="50" :events="appointments" :onEventClick="setEvent">
       </vue-cal>
 
       <!-- Render all appointments -->
@@ -19,6 +19,7 @@
       </b-list-group-item>
     </b-list-group> -->
       <add-slot :publishSlot="publishTimeSlot" />
+      <manage-slot :selected-event="selectedEvent" :delete-event="deleteAppointment" />
       <b-button variant="primary" class="my-3" v-b-modal.add-slot>Add Timeslot</b-button>
       <!-- show all messages in notifications -->
       <b-alert show variant="info" dismissible fade v-show="notifications.length > 0">
@@ -32,6 +33,7 @@
 import VueCal from 'vue-cal'
 import 'vue-cal/dist/vuecal.css'
 import AddSlot from '../components/AddSlot.vue'
+import ManageSlot from '../components/ManageSlot.vue'
 
 export default {
   data() {
@@ -39,15 +41,17 @@ export default {
       // newAppointment: { date: '', startTime: '', endTime: '' }, // this depends on how the DB will look like
       appointments: [], // Appointments fetched from API will be stored here
       notifications: [], // Notifications fetched from API will be stored here
+      selectedEvent: null,
       loading: true // Set to false once data is fetched from API
     }
   },
-  components: { VueCal, AddSlot },
+  components: { VueCal, AddSlot, ManageSlot },
   methods: {
     publishTimeSlot(appointment) {
       // Simulate API call to publish time slot
       // Add logic to handle the API response if needed
       this.appointments.push({
+        id: Math.random(),
         title: 'Free Slot',
         start: `${appointment.date} ${appointment.startTime}`,
         end: `${appointment.date} ${appointment.endTime}`,
@@ -58,11 +62,17 @@ export default {
       // Clear the form
       // this.newAppointment = { date: '', startTime: '', endTime: '' }
     },
-    deleteAppointment(index) {
+    deleteAppointment() {
       // Simulate API call to delete time slot
+      const index = this.appointments.findIndex(event => event.id === this.selectedEvent.id)
       this.appointments.splice(index, 1)
+      this.$bvModal.hide('selectedEvent')
       // Notify that the dentist has canceled an appointment
       // TODO: Implement API for deleting appointment and notify patients
+    },
+    setEvent(event) {
+      this.selectedEvent = event
+      this.$bvModal.show('selectedEvent')
     }
   },
   // Fetch appointments and notifications from API on component mount
@@ -71,6 +81,7 @@ export default {
     // Replace this with actual API call when implemented
     this.appointments = [
       {
+        id: Math.random(),
         title: 'Free Slot',
         start: '2023-12-01 09:00',
         end: '2023-12-01 10:00',
@@ -78,6 +89,7 @@ export default {
         class: 'free-slot'
       },
       {
+        id: Math.random(),
         title: 'Booked Slot',
         start: '2023-12-04 09:00',
         end: '2023-12-04 10:00',
@@ -85,6 +97,7 @@ export default {
         class: 'booked-slot'
       },
       {
+        id: Math.random(),
         title: 'Free Slot',
         start: '2023-12-05 08:00',
         end: '2023-12-05 09:00',
@@ -95,7 +108,7 @@ export default {
 
     setTimeout(() => {
       this.loading = false
-    }, 1000)
+    }, 1500)
     // TODO: fetch information using API to populate fields
   }
 }
