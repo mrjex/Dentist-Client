@@ -1,11 +1,16 @@
 <template>
   <div>
-    <vue-cal style="height: 650px" class="vuecal--blue-theme" :disable-views="['years', 'year', 'month']" hide-weekends
-      :time-cell-height="50">
-    </vue-cal>
+    <b-container v-if="this.loading" class="mx-auto text-center" id="loading-container">
+      <img src="../assets/tooth.png" id="loading-img" class="d-block m-auto" />
+      <h3>Brushing Teeth...</h3>
+    </b-container>
+    <div v-else>
+      <vue-cal style="height: 650px" class="vuecal--blue-theme" :disable-views="['years', 'year', 'month']" hide-weekends
+        :time-cell-height="50">
+      </vue-cal>
 
-    <!-- Render all appointments -->
-    <!-- <b-list-group>
+      <!-- Render all appointments -->
+      <!-- <b-list-group>
       <b-list-group-item v-for="(appointment, index) in appointments" :key="index">
         {{ appointment.date }} from {{ appointment.startTime }} to {{ appointment.endTime }} - {{ appointment.booked ? 'Booked' : 'Available' }}
         <div class="ml-auto">
@@ -13,12 +18,13 @@
         </div>
       </b-list-group-item>
     </b-list-group> -->
-    <add-slot />
-    <b-button class="my-3" v-b-modal.add-slot>Add Timeslot</b-button>
-    <!-- show all messages in notifications -->
-    <b-alert show variant="info" dismissible fade v-show="notifications.length > 0">
-      <div v-for="(notification, index) in notifications" :key="index">{{ notification }}</div>
-    </b-alert>
+      <add-slot />
+      <b-button variant="primary" class="my-3" v-b-modal.add-slot>Add Timeslot</b-button>
+      <!-- show all messages in notifications -->
+      <b-alert show variant="info" dismissible fade v-show="notifications.length > 0">
+        <div v-for="(notification, index) in notifications" :key="index">{{ notification }}</div>
+      </b-alert>
+    </div>
   </div>
 </template>
 
@@ -32,7 +38,8 @@ export default {
     return {
       // newAppointment: { date: '', startTime: '', endTime: '' }, // this depends on how the DB will look like
       appointments: [], // Appointments fetched from API will be stored here
-      notifications: [] // Notifications fetched from API will be stored here
+      notifications: [], // Notifications fetched from API will be stored here
+      loading: true // Set to false once data is fetched from API
     }
   },
   components: { VueCal, AddSlot },
@@ -60,6 +67,9 @@ export default {
       { date: '2023-12-01', startTime: '09:00', endTime: '10:00', booked: false }
     ]
 
+    setTimeout(() => {
+      this.loading = false
+    }, 5000)
     // TODO: fetch information using API to populate fields
   }
 }
