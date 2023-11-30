@@ -6,7 +6,7 @@
     </b-container>
     <div v-else>
       <vue-cal style="height: 650px" class="vuecal--blue-theme" :disable-views="['years', 'year', 'month']" hide-weekends
-        :time-cell-height="50">
+        :time-cell-height="50" :events="appointments">
       </vue-cal>
 
       <!-- Render all appointments -->
@@ -18,7 +18,7 @@
         </div>
       </b-list-group-item>
     </b-list-group> -->
-      <add-slot />
+      <add-slot :publishSlot="publishTimeSlot" />
       <b-button variant="primary" class="my-3" v-b-modal.add-slot>Add Timeslot</b-button>
       <!-- show all messages in notifications -->
       <b-alert show variant="info" dismissible fade v-show="notifications.length > 0">
@@ -44,13 +44,19 @@ export default {
   },
   components: { VueCal, AddSlot },
   methods: {
-    publishTimeSlot() {
+    publishTimeSlot(appointment) {
       // Simulate API call to publish time slot
       // Add logic to handle the API response if needed
-      this.appointments.push({ ...this.newAppointment, booked: false })
+      this.appointments.push({
+        title: 'Free Slot',
+        start: `${appointment.date} ${appointment.startTime}`,
+        end: `${appointment.date} ${appointment.endTime}`,
+        class: 'free-slot'
+      })
+      this.$bvModal.hide('add-slot')
       // TODO: Implement API for publishing appointments
       // Clear the form
-      this.newAppointment = { date: '', startTime: '', endTime: '' }
+      // this.newAppointment = { date: '', startTime: '', endTime: '' }
     },
     deleteAppointment(index) {
       // Simulate API call to delete time slot
@@ -64,12 +70,32 @@ export default {
     // Simulate fetching appointments from API
     // Replace this with actual API call when implemented
     this.appointments = [
-      { date: '2023-12-01', startTime: '09:00', endTime: '10:00', booked: false }
+      {
+        title: 'Free Slot',
+        start: '2023-12-01 09:00',
+        end: '2023-12-01 10:00',
+        booked: false,
+        class: 'free-slot'
+      },
+      {
+        title: 'Booked Slot',
+        start: '2023-12-04 09:00',
+        end: '2023-12-04 10:00',
+        booked: true,
+        class: 'booked-slot'
+      },
+      {
+        title: 'Free Slot',
+        start: '2023-12-05 08:00',
+        end: '2023-12-05 09:00',
+        booked: false,
+        class: 'free-slot'
+      }
     ]
 
     setTimeout(() => {
       this.loading = false
-    }, 5000)
+    }, 1000)
     // TODO: fetch information using API to populate fields
   }
 }

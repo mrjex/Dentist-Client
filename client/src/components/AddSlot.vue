@@ -1,6 +1,6 @@
 <template>
   <b-modal id="add-slot" title="Add Slot" hide-footer>
-    <b-form @submit.prevent="publishTimeSlot">
+    <b-form @submit.prevent="() => publishSlot(appointment)">
       <b-form-group label="Date:" label-for="dateInput">
         <b-form-input v-model="appointment.date" type="date" required id="dateInput"></b-form-input>
       </b-form-group>
@@ -16,6 +16,7 @@
 </template>
 <script>
 export default {
+  props: ['publishSlot'],
   data() {
     return {
       appointment: {
@@ -23,11 +24,6 @@ export default {
         startTime: '',
         endTime: ''
       }
-    }
-  },
-  methods: {
-    publishTimeSlot() {
-
     }
   }
 }

@@ -65,3 +65,17 @@ body,
     color: black;
     background-color: white;
 }
+
+.free-slot {
+    background-color: skyblue !important;
+    color: white !important;
+}
+
+.booked-slot {
+    background: repeating-linear-gradient(45deg, transparent, transparent 10px, #f2f2f2 10px, #f2f2f2 20px);
+    color: black !important;
+}
+
+.vuecal__event {
+    cursor: pointer;
+}
