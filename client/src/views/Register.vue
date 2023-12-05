@@ -13,14 +13,6 @@
                 <b-form-input type="password" v-model="form.password" required></b-form-input>
             </b-form-group>
 
-            <b-form-group label="Clinic Name:" label-for="Clinic Name:">
-                <b-form-input id="input-3" v-model="form.clinic.name" required></b-form-input>
-            </b-form-group>
-
-                        <b-form-group label="Clinic Position:" label-for="Clinic Name:">
-                    <b-form-input id="input-3" v-model="form.clinic.position" required></b-form-input>
-                </b-form-group>
-
             <b-button type="submit" variant="primary">Submit</b-button>
         </b-form>
         <b-card class="mt-3" header="Form Data Result">
@@ -30,23 +22,32 @@
 </template>
 
 <script>
+import { Api } from '../Api'
+import router from '../router'
+
 export default {
   data() {
     return {
       form: {
         username: '',
-        password: '',
-        clinic: {
-          name: '',
-          position: '57.18,12.12'
-        }
+        password: ''
+        // clinic: {
+        //   name: '',
+        //   position: '57.18,12.12'
+        // }
       }
     }
   },
   methods: {
     onSubmit(event) {
       event.preventDefault()
-      alert(JSON.stringify(this.form))
+      Api.post('/users/register', this.form).then(response => {
+        console.log(response)
+        router.push('/')
+      })
+        .catch(error => {
+          console.log(error)
+        })
     },
     onReset(event) {
       event.preventDefault()

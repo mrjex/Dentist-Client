@@ -19,8 +19,11 @@
       </b-list-group-item>
     </b-list-group> -->
       <add-slot :publishSlot="publishTimeSlot" />
+      <add-clinic :publishClinic="publishClinic" />
       <manage-slot :selected-event="selectedEvent" :delete-event="deleteAppointment" />
       <b-button variant="primary" class="my-3" v-b-modal.add-slot>Add Timeslot</b-button>
+      <br />
+      <b-button variant="primary" class="my-3" v-b-modal.add-clinic>Add Clinic</b-button>
       <!-- show all messages in notifications -->
       <b-alert show variant="info" dismissible fade v-show="notifications.length > 0">
         <div v-for="(notification, index) in notifications" :key="index">{{ notification }}</div>
@@ -34,6 +37,8 @@ import VueCal from 'vue-cal'
 import 'vue-cal/dist/vuecal.css'
 import AddSlot from '../components/AddSlot.vue'
 import ManageSlot from '../components/ManageSlot.vue'
+import AddClinic from '../components/AddClinic.vue'
+import { Api } from '../Api'
 
 export default {
   data() {
@@ -45,7 +50,7 @@ export default {
       loading: true // Set to false once data is fetched from API
     }
   },
-  components: { VueCal, AddSlot, ManageSlot },
+  components: { VueCal, AddSlot, ManageSlot, AddClinic },
   methods: {
     publishTimeSlot(appointment) {
       // Simulate API call to publish time slot
@@ -58,6 +63,20 @@ export default {
         class: 'free-slot'
       })
       this.$bvModal.hide('add-slot')
+      // TODO: Implement API for publishing appointments
+      // Clear the form
+      // this.newAppointment = { date: '', startTime: '', endTime: '' }
+    },
+    publishClinic(clinic) {
+      // Simulate API call to publish time slot
+      // Add logic to handle the API response if needed
+      console.log(clinic)
+      Api.post('/clinics', clinic).then(response => {
+        this.$bvModal.hide('add-clinic')
+      })
+        .catch(error => {
+          console.error(error)
+        })
       // TODO: Implement API for publishing appointments
       // Clear the form
       // this.newAppointment = { date: '', startTime: '', endTime: '' }

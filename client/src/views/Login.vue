@@ -10,7 +10,7 @@
             </b-form-group>
 
             <b-form-group label="Password:" label-for="Password:">
-                <b-form-input type="password" v-model="form.password"  required></b-form-input>
+                <b-form-input type="password" v-model="form.password" required></b-form-input>
             </b-form-group>
 
             <b-button type="submit" variant="primary">Submit</b-button>
@@ -22,6 +22,9 @@
 </template>
 
 <script>
+import { Api } from '../Api'
+import router from '../router'
+
 export default {
   data() {
     return {
@@ -34,15 +37,18 @@ export default {
   methods: {
     onSubmit(event) {
       event.preventDefault()
-      alert(JSON.stringify(this.form))
+      Api.post('/users/login', this.form)
+        .then((response) => {
+          router.push('/')
+        })
+        .catch((err) => {
+          alert('user already exists!')
+          console.log(err)
+        })
     },
     onReset(event) {
       event.preventDefault()
       // Reset our form values
-      this.form.email = ''
-      this.form.name = ''
-      this.form.food = null
-      this.form.checked = []
       // Trick to reset/clear native browser form validation state
     }
   }
