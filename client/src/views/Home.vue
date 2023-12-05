@@ -92,7 +92,7 @@ export default {
         id: Math.random(),
         title: 'Booked Slot',
         start: '2023-12-04 09:00',
-        end: '2023-12-04 10:00',
+        end: '2023-12-04 11:00',
         booked: true,
         class: 'booked-slot'
       },
