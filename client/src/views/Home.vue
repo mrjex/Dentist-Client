@@ -73,42 +73,45 @@ export default {
     setEvent(event) {
       this.selectedEvent = event
       this.$bvModal.show('selectedEvent')
+    },
+    fetchAppointments() {
+      this.appointments = [
+        {
+          id: Math.random(),
+          title: 'Free Slot',
+          start: '2023-12-01 09:00',
+          end: '2023-12-01 10:00',
+          booked: false,
+          class: 'free-slot'
+        },
+        {
+          id: Math.random(),
+          title: 'Booked Slot',
+          start: '2023-12-04 09:00',
+          end: '2023-12-04 10:00',
+          booked: true,
+          class: 'booked-slot'
+        },
+        {
+          id: Math.random(),
+          title: 'Free Slot',
+          start: '2023-12-05 08:00',
+          end: '2023-12-05 09:00',
+          booked: false,
+          class: 'free-slot'
+        }
+      ]
+
+      setTimeout(() => {
+        this.loading = false
+      }, 1500)
     }
   },
   // Fetch appointments and notifications from API on component mount
   mounted() {
     // Simulate fetching appointments from API
     // Replace this with actual API call when implemented
-    this.appointments = [
-      {
-        id: Math.random(),
-        title: 'Free Slot',
-        start: '2023-12-01 09:00',
-        end: '2023-12-01 10:00',
-        booked: false,
-        class: 'free-slot'
-      },
-      {
-        id: Math.random(),
-        title: 'Booked Slot',
-        start: '2023-12-04 09:00',
-        end: '2023-12-04 10:00',
-        booked: true,
-        class: 'booked-slot'
-      },
-      {
-        id: Math.random(),
-        title: 'Free Slot',
-        start: '2023-12-05 08:00',
-        end: '2023-12-05 09:00',
-        booked: false,
-        class: 'free-slot'
-      }
-    ]
-
-    setTimeout(() => {
-      this.loading = false
-    }, 1500)
+    this.fetchAppointments()
     // TODO: fetch information using API to populate fields
   }
 }
