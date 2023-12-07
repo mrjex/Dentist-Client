@@ -46,7 +46,11 @@ export default {
         window.location = '/'
       })
         .catch(error => {
-          console.log(error)
+          this.$bvToast.toast(error.response.data.message, {
+            title: 'Error',
+            variant: 'danger',
+            autoHideDelay: 5000
+          })
         })
     },
     onReset(event) {
