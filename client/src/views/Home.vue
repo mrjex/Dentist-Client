@@ -23,7 +23,7 @@
       <manage-slot :selected-event="selectedEvent" :delete-event="deleteAppointment" />
       <b-button variant="primary" class="my-3" v-b-modal.add-slot>Add Timeslot</b-button>
       <br />
-      <b-button variant="primary" class="my-3" v-b-modal.add-clinic>Add Clinic</b-button>
+      <!-- <b-button variant="primary" class="my-3" v-b-modal.add-clinic>Add Clinic</b-button> -->
       <!-- show all messages in notifications -->
       <b-alert show variant="info" dismissible fade v-show="notifications.length > 0">
         <div v-for="(notification, index) in notifications" :key="index">{{ notification }}</div>
