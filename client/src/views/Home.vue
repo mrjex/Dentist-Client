@@ -53,19 +53,27 @@ export default {
   components: { VueCal, AddSlot, ManageSlot, AddClinic },
   methods: {
     publishTimeSlot(appointment) {
-      // Simulate API call to publish time slot
-      // Add logic to handle the API response if needed
-      this.appointments.push({
-        id: Math.random(),
-        title: 'Free Slot',
-        start: `${appointment.date} ${appointment.startTime}`,
-        end: `${appointment.date} ${appointment.endTime}`,
-        class: 'free-slot'
+      /**
+       *         const dentist_id = req.body.dentist_id;
+        const start_time = req.body.start_time;
+        const end_time = req.body.end_time;
+       */
+      const user = localStorage.getItem('user')
+      Api.post('/appointments/', {
+        dentist_id: user,
+        start_time: new Date(appointment.date + ' ' + appointment.startTime),
+        end_time: new Date(appointment.date + ' ' + appointment.endTime)
       })
-      this.$bvModal.hide('add-slot')
-      // TODO: Implement API for publishing appointments
-      // Clear the form
-      // this.newAppointment = { date: '', startTime: '', endTime: '' }
+        .then((response) => {
+          this.appointments.push({
+            id: Math.random(),
+            title: 'Free Slot',
+            start: `${appointment.date} ${appointment.startTime}`,
+            end: `${appointment.date} ${appointment.endTime}`,
+            class: 'free-slot'
+          })
+          this.$bvModal.hide('add-slot')
+        })
     },
     publishClinic(clinic) {
       // Simulate API call to publish time slot
@@ -83,6 +91,9 @@ export default {
     },
     deleteAppointment() {
       // Simulate API call to delete time slot
+      Api.delete(`/appointments/${this.selectedEvent.id}`).then(response => {
+
+      })
       const index = this.appointments.findIndex(event => event.id === this.selectedEvent.id)
       this.appointments.splice(index, 1)
       this.$bvModal.hide('selectedEvent')
@@ -112,10 +123,10 @@ export default {
           class: 'booked-slot'
         },
         {
-          id: Math.random(),
+          id: '656e919ce5513b24cca10bda',
           title: 'Free Slot',
-          start: '2023-12-05 08:00',
-          end: '2023-12-05 09:00',
+          start: '2023-12-11 08:00',
+          end: '2023-12-11 09:00',
           booked: false,
           class: 'free-slot'
         }
