@@ -9,22 +9,11 @@
         :time-cell-height="50" :events="appointments" :onEventClick="setEvent">
       </vue-cal>
 
-      <!-- Render all appointments -->
-      <!-- <b-list-group>
-      <b-list-group-item v-for="(appointment, index) in appointments" :key="index">
-        {{ appointment.date }} from {{ appointment.startTime }} to {{ appointment.endTime }} - {{ appointment.booked ? 'Booked' : 'Available' }}
-        <div class="ml-auto">
-        <b-button @click="deleteAppointment(index)" variant="danger">Delete</b-button>
-        </div>
-      </b-list-group-item>
-    </b-list-group> -->
       <add-slot :publishSlot="publishTimeSlot" />
       <add-clinic :publishClinic="publishClinic" />
       <manage-slot :selected-event="selectedEvent" :delete-event="deleteAppointment" />
       <b-button variant="primary" class="my-3" v-b-modal.add-slot>Add Timeslot</b-button>
       <br />
-      <!-- <b-button variant="primary" class="my-3" v-b-modal.add-clinic>Add Clinic</b-button> -->
-      <!-- show all messages in notifications -->
       <b-alert show variant="info" dismissible fade v-show="notifications.length > 0">
         <div v-for="(notification, index) in notifications" :key="index">{{ notification }}</div>
       </b-alert>
@@ -39,6 +28,7 @@ import AddSlot from '../components/AddSlot.vue'
 import ManageSlot from '../components/ManageSlot.vue'
 import AddClinic from '../components/AddClinic.vue'
 import { Api } from '../Api'
+import moment from 'moment'
 
 export default {
   data() {
@@ -53,11 +43,6 @@ export default {
   components: { VueCal, AddSlot, ManageSlot, AddClinic },
   methods: {
     publishTimeSlot(appointment) {
-      /**
-       *         const dentist_id = req.body.dentist_id;
-        const start_time = req.body.start_time;
-        const end_time = req.body.end_time;
-       */
       const user = localStorage.getItem('user')
       Api.post('/appointments/', {
         dentist_id: user,
@@ -66,7 +51,7 @@ export default {
       })
         .then((response) => {
           this.appointments.push({
-            id: Math.random(),
+            id: response.data.message,
             title: 'Free Slot',
             start: `${appointment.date} ${appointment.startTime}`,
             end: `${appointment.date} ${appointment.endTime}`,
@@ -76,73 +61,51 @@ export default {
         })
     },
     publishClinic(clinic) {
-      // Simulate API call to publish time slot
-      // Add logic to handle the API response if needed
-      console.log(clinic)
       Api.post('/clinics', clinic).then(response => {
         this.$bvModal.hide('add-clinic')
       })
         .catch(error => {
           console.error(error)
         })
-      // TODO: Implement API for publishing appointments
-      // Clear the form
-      // this.newAppointment = { date: '', startTime: '', endTime: '' }
     },
     deleteAppointment() {
-      // Simulate API call to delete time slot
       Api.delete(`/appointments/${this.selectedEvent.id}`).then(response => {
-
+        const index = this.appointments.findIndex(event => event.id === this.selectedEvent.id)
+        this.appointments.splice(index, 1)
+        this.$bvModal.hide('selectedEvent')
       })
-      const index = this.appointments.findIndex(event => event.id === this.selectedEvent.id)
-      this.appointments.splice(index, 1)
-      this.$bvModal.hide('selectedEvent')
-      // Notify that the dentist has canceled an appointment
-      // TODO: Implement API for deleting appointment and notify patients
     },
     setEvent(event) {
       this.selectedEvent = event
       this.$bvModal.show('selectedEvent')
     },
     fetchAppointments() {
-      this.appointments = [
-        {
-          id: Math.random(),
-          title: 'Free Slot',
-          start: '2023-12-01 09:00',
-          end: '2023-12-01 10:00',
-          booked: false,
-          class: 'free-slot'
-        },
-        {
-          id: Math.random(),
-          title: 'Booked Slot',
-          start: '2023-12-04 09:00',
-          end: '2023-12-04 11:00',
-          booked: true,
-          class: 'booked-slot'
-        },
-        {
-          id: '656e919ce5513b24cca10bda',
-          title: 'Free Slot',
-          start: '2023-12-11 08:00',
-          end: '2023-12-11 09:00',
-          booked: false,
-          class: 'free-slot'
-        }
-      ]
-
-      setTimeout(() => {
-        this.loading = false
-      }, 1500)
+      Api.get(`/appointments/${localStorage.getItem('user')}/all`)
+        .then(response => {
+          const { appointments, availabletimes } = response.data
+          const timeslots = [...appointments, ...availabletimes]
+          this.appointments = timeslots.map(parseAppointment)
+          this.loading = false
+        })
+        .catch(error => {
+          console.error(error)
+        })
     }
   },
   // Fetch appointments and notifications from API on component mount
   mounted() {
-    // Simulate fetching appointments from API
-    // Replace this with actual API call when implemented
     this.fetchAppointments()
-    // TODO: fetch information using API to populate fields
+  }
+}
+function parseAppointment(appointment) {
+  const booked = appointment.patient_id
+  return {
+    id: appointment.ID,
+    title: booked ? 'BookedSlot' : 'Free Slot',
+    booked,
+    class: booked ? 'booked-slot' : 'free-slot',
+    start: moment(appointment.Start_time).format('YYYY-MM-DD HH:mm'),
+    end: moment(appointment.End_time).format('YYYY-MM-DD HH:mm')
   }
 }
 </script>
