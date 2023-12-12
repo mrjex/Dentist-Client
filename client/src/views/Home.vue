@@ -98,14 +98,14 @@ export default {
   }
 }
 function parseAppointment(appointment) {
-  const booked = appointment.patient_id
+  const booked = !!appointment.patient_id
   return {
-    id: appointment.ID,
+    id: appointment._id,
     title: booked ? 'BookedSlot' : 'Free Slot',
     booked,
     class: booked ? 'booked-slot' : 'free-slot',
-    start: moment(appointment.Start_time).format('YYYY-MM-DD HH:mm'),
-    end: moment(appointment.End_time).format('YYYY-MM-DD HH:mm')
+    start: moment(appointment.start_time).format('YYYY-MM-DD HH:mm'),
+    end: moment(appointment.end_time).format('YYYY-MM-DD HH:mm')
   }
 }
 </script>

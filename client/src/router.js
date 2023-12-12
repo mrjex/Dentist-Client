@@ -3,6 +3,8 @@ import process from '../.eslintrc'
 import Home from '@/views/Home.vue'
 import Login from '@/views/Login.vue'
 import Register from '@/views/Register.vue'
+import Clinics from '@/views/Clinics.vue'
+
 import Vue from 'vue'
 
 Vue.use(Router)
@@ -32,6 +34,11 @@ const router = new Router({
       path: '/register',
       name: 'Register',
       component: Register
+    },
+    {
+      path: '/clinics',
+      name: 'Clinics',
+      component: Clinics
     }
   ]
 })
