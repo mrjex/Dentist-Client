@@ -1,7 +1,7 @@
 <template>
-    <b-form-group label="Clinic">
-        <b-form-select :value="clinic" @change="setClinic" :options="clinics"></b-form-select>
-    </b-form-group>
+  <b-form-group label="Clinic">
+    <b-form-select :value="clinic" @change="setClinic" :options="clinics"></b-form-select>
+  </b-form-group>
 </template>
 
 <script>
@@ -26,10 +26,17 @@ export default {
     try {
       /* Expect data in the form [{value: string, text: string}] */
       const { data } = await Api.get('/clinics')
-      this.clinics = data
+      this.clinics = data.clinics.map(parseClinic)
     } catch (error) {
       console.error(error)
     }
+  }
+}
+
+function parseClinic(clinic) {
+  return {
+    text: clinic.clinic_name,
+    value: clinic._id
   }
 }
 </script>
