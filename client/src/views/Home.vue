@@ -10,7 +10,6 @@
       </vue-cal>
 
       <add-slot :publishSlot="publishTimeSlot" />
-      <add-clinic :publishClinic="publishClinic" />
       <manage-slot :selected-event="selectedEvent" :delete-event="deleteAppointment" />
       <b-button variant="primary" class="my-3" v-b-modal.add-slot>Add Timeslot</b-button>
       <br />
@@ -26,7 +25,6 @@ import VueCal from 'vue-cal'
 import 'vue-cal/dist/vuecal.css'
 import AddSlot from '../components/AddSlot.vue'
 import ManageSlot from '../components/ManageSlot.vue'
-import AddClinic from '../components/AddClinic.vue'
 import { Api } from '../Api'
 import moment from 'moment'
 
@@ -37,17 +35,18 @@ export default {
       appointments: [], // Appointments fetched from API will be stored here
       notifications: [], // Notifications fetched from API will be stored here
       selectedEvent: null,
-      loading: true // Set to false once data is fetched from API
+      loading: false // Set to false once data is fetched from API
     }
   },
-  components: { VueCal, AddSlot, ManageSlot, AddClinic },
+  components: { VueCal, AddSlot, ManageSlot },
   methods: {
     publishTimeSlot(appointment) {
       const user = localStorage.getItem('user')
       Api.post('/appointments/', {
         dentist_id: user,
         start_time: new Date(appointment.date + ' ' + appointment.startTime),
-        end_time: new Date(appointment.date + ' ' + appointment.endTime)
+        end_time: new Date(appointment.date + ' ' + appointment.endTime),
+        clinic_id: appointment.clinic
       })
         .then((response) => {
           this.appointments.push({
@@ -58,14 +57,6 @@ export default {
             class: 'free-slot'
           })
           this.$bvModal.hide('add-slot')
-        })
-    },
-    publishClinic(clinic) {
-      Api.post('/clinics', clinic).then(response => {
-        this.$bvModal.hide('add-clinic')
-      })
-        .catch(error => {
-          console.error(error)
         })
     },
     deleteAppointment() {
