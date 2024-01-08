@@ -49,8 +49,9 @@ export default {
         clinic_id: appointment.clinic
       })
         .then((response) => {
+          const { availabletime } = response.data
           this.appointments.push({
-            id: response.data.message,
+            id: availabletime._id,
             title: 'Free Slot',
             start: `${appointment.date} ${appointment.startTime}`,
             end: `${appointment.date} ${appointment.endTime}`,
