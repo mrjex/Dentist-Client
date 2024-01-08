@@ -10,16 +10,7 @@ export default {
   props: ['clinic', 'setClinic'],
   data: function () {
     return {
-      clinics: [
-        {
-          text: 'Clinic 1',
-          value: '6578330dd7a5ee0db838d532'
-        },
-        {
-          text: 'Clinic 2',
-          value: 'Test'
-        }
-      ]
+      clinics: []
     }
   },
   async mounted() {
