@@ -5,6 +5,11 @@
       <div class="text-center">
         <img src="../assets/tooth.png" width="200px" />
       </div>
+
+      <b-form-group label="Email:" label-for="Email:">
+        <b-form-input id="input-1" v-model="form.email" required></b-form-input>
+      </b-form-group>
+
       <b-form-group label="Username:" label-for="Username:">
         <b-form-input id="input-2" v-model="form.username" required></b-form-input>
       </b-form-group>
@@ -16,9 +21,6 @@
       <p>Already have an account? <a href="/login">Login</a></p>
       <b-button type="submit" variant="primary">Register</b-button>
     </b-form>
-    <!-- <b-card class="mt-3" header="Form Data Result">
-            <pre class="m-0">{{ form }}</pre>
-        </b-card> -->
   </div>
 </template>
 
@@ -30,11 +32,8 @@ export default {
     return {
       form: {
         username: '',
-        password: ''
-        // clinic: {
-        //   name: '',
-        //   position: '57.18,12.12'
-        // }
+        password: '',
+        email: ''
       }
     }
   },
@@ -57,7 +56,8 @@ export default {
       event.preventDefault()
       // Reset our form values
       this.form.email = ''
-      this.form.name = ''
+      this.form.password = ''
+      this.form.username = ''
       // Trick to reset/clear native browser form validation state
     }
   }
