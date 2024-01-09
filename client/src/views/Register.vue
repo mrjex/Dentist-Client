@@ -41,7 +41,7 @@ export default {
     onSubmit(event) {
       event.preventDefault()
       Api.post('/users/register', this.form).then(response => {
-        localStorage.setItem('user', JSON.stringify(response))
+        localStorage.setItem('user', response.data.dentist._id)
         window.location = '/'
       })
         .catch(error => {
