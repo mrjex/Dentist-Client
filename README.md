@@ -1,3 +1,7 @@
+# Dentist Client
+
+> ⚠️ **Disclaimer**: This is a **fork** of [Dentist Client](https://github.com/Dentanoid/Dentist-Client), originally created and maintained by the [Dentanoid Organization](https://github.com/Dentanoid)
+
 
 ## Project setup
 
